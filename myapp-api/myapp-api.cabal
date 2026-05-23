@@ -1,0 +1,24 @@
+cabal-version: 3.0
+name:            myapp-api
+version:         0.1.0.0
+license:         NONE
+build-type:      Simple
+
+library
+  hs-source-dirs:   src
+  default-language: Haskell2010
+  build-depends:
+      aeson
+    , base
+    , text
+  exposed-modules:
+    MyApp.API
+  ghc-options: -Wall
+
+  -- When compiled for WebAssembly (i.e. from cabal.project.ui) we additionally
+  -- depend on miso so we can derive Miso.JSON instances alongside Aeson's.
+  -- Miso ships its own JSON class for the WASM frontend; Miso.Fetch.getJSON
+  -- needs that one, while the Servant server needs Aeson's.
+  if arch(wasm32)
+    build-depends: miso >= 1.9
+    cpp-options: -DWASM
