@@ -13,7 +13,7 @@ library
     , text
   exposed-modules:
     MyApp.API
-  ghc-options: -Wall
+  ghc-options: -Wall -O2
 
   -- When compiled for WebAssembly (i.e. from cabal.project.ui) we additionally
   -- depend on miso so we can derive Miso.JSON instances alongside Aeson's.

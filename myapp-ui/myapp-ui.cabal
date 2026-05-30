@@ -22,6 +22,8 @@ executable myapp-ui
       -no-hs-main
       -optl-mexec-model=reactor
       "-optl-Wl,--export=hs_start"
+      -split-sections
+      "-optl-Wl,--gc-sections"
     cpp-options: -DWASM
     buildable: True
   else

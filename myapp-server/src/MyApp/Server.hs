@@ -10,6 +10,7 @@ import Control.Monad.IO.Class (liftIO)
 import Network.Wai.Application.Static (defaultWebAppSettings, staticApp)
 import Network.Wai.Handler.Warp (run)
 import Network.Wai.Middleware.Cors (simpleCors)
+import Network.Wai.Middleware.Gzip (def, gzip)
 import Servant
 import System.Environment (lookupEnv)
 
@@ -39,7 +40,7 @@ server ref staticDir =
       pure (CounterState n)
 
 app :: TVar Int -> FilePath -> Application
-app ref dir = simpleCors (serve (Proxy @API) (server ref dir))
+app ref dir = gzip def (simpleCors (serve (Proxy @API) (server ref dir)))
 
 main :: IO ()
 main = do
