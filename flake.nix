@@ -55,13 +55,19 @@
           '';
         };
 
-        # Static files laid out at the in-image path used by MYAPP_STATIC_DIR.
-        # Note: the WASM artifacts must be built via `nix run .#build-ui` and
-        # committed into myapp-ui/static/ before `nix build` will bake them in
-        # (Nix's pure source filter only sees git-tracked files).
+        # Reads the WASM bundle from MYAPP_WASM_DIR when set (pass via
+        # `nix build --impure` so CI can inject freshly-built artifacts without
+        # committing them). Falls back to the git-tracked ./myapp-ui/static/
+        # for local `nix build` without --impure.
+        wasmDir =
+          let
+            env = builtins.getEnv "MYAPP_WASM_DIR";
+          in
+          if env != "" then /. + env else ./myapp-ui/static;
+
         staticFilesImage = pkgs.runCommand "myapp-static-image" { } ''
           mkdir -p $out/opt/myapp/static
-          cp -r ${./myapp-ui/static}/. $out/opt/myapp/static/
+          cp -r ${wasmDir}/. $out/opt/myapp/static/
         '';
 
         # ----- Backend OCI image (Nix-built; deps come from the binary cache) -----

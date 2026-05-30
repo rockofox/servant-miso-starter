@@ -2,3 +2,7 @@ dist-newstyle/
 .direnv/
 result
 result-*
+
+# WASM build artifacts (injected into the image via MYAPP_WASM_DIR / nix build --impure)
+myapp-ui/static/app.wasm
+myapp-ui/static/ghc_wasm_jsffi.js

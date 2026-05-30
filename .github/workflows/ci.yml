@@ -80,9 +80,10 @@ jobs:
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v18
 
-      # Builds only myapp-api + myapp-server (deps come from cache.nixos.org).
+      # MYAPP_WASM_DIR injects the freshly-built (uncommitted) bundle into the
+      # flake via builtins.getEnv; --impure allows that env-var read.
       - name: Build server image (Nix)
-        run: nix build .#myapp-server-image-stream --print-build-logs
+        run: MYAPP_WASM_DIR="$PWD/myapp-ui/static" nix build .#myapp-server-image-stream --impure --print-build-logs
 
       - name: Compute sha tag
         id: tags
